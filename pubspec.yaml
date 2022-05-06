@@ -65,7 +65,6 @@ flutter:
   assets:
    - images/
    - world_map.json
-   - WHO-COVID-19-global-data.json
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

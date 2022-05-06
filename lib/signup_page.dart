@@ -42,7 +42,7 @@ class _SignUpState extends State<SignUp> {
             ),
           ),
           Expanded(
-              flex: 3,
+              flex: 5,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
@@ -205,11 +205,20 @@ class _SignUpState extends State<SignUp> {
                               //*************************************************************************************** */
                               onTap: () {
                                 // signup(context)
-                                Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) {
-                                    return wellcomsecreen();
-                                  },
-                                ));
+                                print("hi im hosny");
+                                  signup( usernameeController.text,
+                                      FirstnameController.text,
+                                      LastnameController.text,
+                                      emailController.text,
+                                      passworddController.text,
+                                      context);
+
+                                // Navigator.push(context, MaterialPageRoute(
+                                //   builder: (context) {
+                                //     return wellcomsecreen();
+                                //   },
+                                // )
+                                // );
                               },
                               //************************************************************************************** */
 
@@ -239,24 +248,23 @@ class _SignUpState extends State<SignUp> {
 
   signup(String username,String firstname,String lastname,String email, String password, BuildContext contextt) async {
 
+    print("hi im omar");
+    var response =await http.post(Uri.parse("http://192.168.1.65:8090/api/v1/user/addUser"),body:json.encode({
+    'userName':username,
+    'firstName':firstname,
+    'lastName':lastname,
+    'email':email,
+    'password':password,
+      'role' : "User"
 
-    http.Response response =await http.post(
-      Uri.parse("uri"),
-      body:{
-        'username':username,
-        'firstname':firstname,
-        'lastname':lastname,
-        'email':email,
-        'password':password,
-      }
+    }), headers: {"content-type": "application/json"});
 
-    );
-if(response.statusCode==200)
+    if(response.statusCode==200)
   {
     print('account is creted ');
   }
 else{
-  print('Faild');
+  print(response.statusCode);
 }
 
 
