@@ -121,11 +121,7 @@ class _SignInState extends State<SignIn> {
                               onTap: () {
                                 signin(usernameController.text,
                                     passwordController.text, context);
-                                Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) {
-                                    return wellcomsecreen();
-                                  },
-                                ));
+                                print('hello world');
                               },
                               //************************************************************************************** */
                               child: Container(
@@ -179,20 +175,17 @@ class _SignInState extends State<SignIn> {
   }
 
   signin(String username, String password, BuildContext contextt) async {
-
+    print('potato');
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     Map data = {'userName': username, 'userPassword': password};
 
     var jasonData = null;
     var response = await http.post(
-        Uri.parse("http://192.168.1.114:8080/api/v1/authenticate/authenticate"),
+        Uri.parse("http://192.168.1.65:8090/api/v1/authenticate/authenticate"),
         body: json.encode({
-
-
           'userName': username,
           'userPassword': password,
-
         }),
         headers: {"content-type": "application/json"});
 
@@ -208,8 +201,8 @@ class _SignInState extends State<SignIn> {
 
         //  });
 
-        //  prefs.setString("token",jasonData['jwtToken']);
-        //  prefs.setString("username",jasonData['user']["userName"]);
+        prefs.setString("token",jasonData['jwtToken']);
+        // prefs.setString("username",jasonData['user']["userName"]);
 
         Navigator.push(contextt, MaterialPageRoute(
           builder: (context) {
@@ -225,7 +218,7 @@ class _SignInState extends State<SignIn> {
       }
     }
     else{
-      print('faild');
+      print(response.statusCode);
     }
   }
 
