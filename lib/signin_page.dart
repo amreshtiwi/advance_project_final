@@ -22,11 +22,14 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
+      //resizeToAvoidBottomInset: false,
       body: Column(
         children: <Widget>[
           Expanded(
-            flex: 3,
+            flex: 2,
             child: Container(
               margin: EdgeInsets.only(top: 10),
               decoration: BoxDecoration(
@@ -67,9 +70,9 @@ class _SignInState extends State<SignIn> {
                         )
                       ],
                     ),
-                    Spacer(),
+                   // Spacer(),
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
+                      padding: const EdgeInsets.only(bottom: 20,top: 50),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
@@ -119,10 +122,13 @@ class _SignInState extends State<SignIn> {
                             child: GestureDetector(
                               //*************************************************************************************** */
                               onTap: () {
-                                signin(usernameController.text,
-                                    passwordController.text, context);
-                                print('hello world');
-                              },
+
+                                Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) {
+                                    return wellcomsecreen();
+                                  },
+                                ));
+                                      },
                               //************************************************************************************** */
                               child: Container(
                                 padding: EdgeInsets.all(15),
@@ -152,15 +158,29 @@ class _SignInState extends State<SignIn> {
                             ),
                           ),
                           Spacer(),
-                          Container(
-                            padding: EdgeInsets.all(15),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: prcolor,
-                            ),
-                            child: Icon(
-                              Icons.login_sharp,
-                              color: Colors.white,
+                          //Icons.login_sharp,
+
+
+                          FittedBox(
+                            child: GestureDetector(
+                              //*************************************************************************************** */
+                              onTap: () {
+                                signin(usernameController.text,
+                                    passwordController.text, context);
+                                print('hello world');
+                              },
+                              //************************************************************************************** */
+                              child: Container(
+                                padding: EdgeInsets.all(15),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: prcolor,
+                                ),
+                                child: Icon(
+                                  Icons.login_sharp,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
                           ),
                         ],

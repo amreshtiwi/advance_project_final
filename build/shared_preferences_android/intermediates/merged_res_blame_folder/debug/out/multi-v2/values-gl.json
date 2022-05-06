@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "D:\\BOOKS\\Advanced\\advanced_project\\Advance_Software_Covid19_project\\FrontEnd\\build\\shared_preferences_android\\intermediates\\res\\merged\\debug\\values-gl\\values-gl.xml",
+            "outputFile": "D:\\ALL FOLDER\\advance project\\covid_project_final_v1\\advance_project_final\\build\\shared_preferences_android\\intermediates\\res\\merged\\debug\\values-gl\\values-gl.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Ammr6\\.gradle\\caches\\transforms-2\\files-2.1\\122df2e57d294d1a53db26bbc3b813c1\\core-1.6.0\\res\\values-gl\\values-gl.xml",
+                    "source": "C:\\Users\\Hosny\\.gradle\\caches\\transforms-2\\files-2.1\\122df2e57d294d1a53db26bbc3b813c1\\core-1.6.0\\res\\values-gl\\values-gl.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -16,10 +16,10 @@
             ]
         },
         {
-            "outputFile": "D:\\BOOKS\\Advanced\\advanced_project\\Advance_Software_Covid19_project\\FrontEnd\\build\\shared_preferences_android\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-gl\\values-gl.xml",
+            "outputFile": "D:\\ALL FOLDER\\advance project\\covid_project_final_v1\\advance_project_final\\build\\shared_preferences_android\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-gl\\values-gl.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Ammr6\\.gradle\\caches\\transforms-2\\files-2.1\\122df2e57d294d1a53db26bbc3b813c1\\core-1.6.0\\res\\values-gl\\values-gl.xml",
+                    "source": "C:\\Users\\Hosny\\.gradle\\caches\\transforms-2\\files-2.1\\122df2e57d294d1a53db26bbc3b813c1\\core-1.6.0\\res\\values-gl\\values-gl.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
