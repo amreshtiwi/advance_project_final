@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -143,8 +144,16 @@ class _topState extends State<top> {
   getCountryList() async{
     // SharedPreferences prefs = await SharedPreferences.getInstance();
     //api/v1/Country
-    final response =await http.get(Uri.parse("http://localhost:8090/api/v1/Country"));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token=(prefs.getString('token')??'');
+    final response =await http.get(Uri.parse("http://192.168.1.65:8090/api/v1/Country/all"),
+      // Send authorization headers to the backend.
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer '+token,
+        "content-type": "application/json"
+      },);
     if (response.statusCode == 200) {
+      print(response.body);
       final list = await json.decode(response.body) as List<dynamic>;
       // return list.map((e) => countryWithID.fromJson(e)).toList();
       return list;
@@ -157,18 +166,21 @@ getCumlative()async{
 }
 addingNewCases()async{ ///////////////////////////////////////////////////////////////
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  Map data = {'cases': cases, 'deathes': deaths, 'date': formatted , 'cumlativeCases': cases , 'cumlativeDthes': deaths };
+  String token=(prefs.getString('token')??'');
   var jasonData = null;
   var response = await http.post(
-      Uri.parse("http://192.168.1.65:8090/api/v1/authenticate/authenticate"),
+      Uri.parse("http://192.168.1.65:8090/api/v1/covid/addCovid"),
       body: json.encode({
-        'userName': cases,
-        'userPassword': deaths,
-        'date': formatted ,
-        'cumlativeCases': cases ,
-        'cumlativeDthes': deaths
+        'newCases': cases,
+        'newDeaths': deaths,
+        'dateReported': formatted ,
+        'cumulativeCases': cases ,
+        'cumulativeDeaths': deaths
       }),
-      headers: {"content-type": "application/json"});
+    headers: {
+      HttpHeaders.authorizationHeader: 'Bearer '+token,
+      "content-type": "application/json"
+    },);
   if (response.statusCode == 200) {
     print('acc succcess');
     jasonData = json.decode(response.body);

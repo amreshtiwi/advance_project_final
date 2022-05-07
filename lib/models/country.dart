@@ -24,12 +24,12 @@ class countryModel {
 
   countryModel.fromJson(Map<String,dynamic> json)
   {
-    date = json["Date_reported"];
-    country = json["Country"];
-    code = json["Country_code"];
-    cumCases = json["Cumulative_cases"];
-    cumDeaths = json["Cumulative_deaths"];
-    newCases = json["New_cases"];
-    newDeaths = json["New_deaths"];
+    date = json["dateReported"];
+    country = json["country"]["name"];
+    code = json["country"]["postalCode"];
+    cumCases = json["cumulativeCases"];
+    cumDeaths = json["cumulativeDeaths"];
+    newCases = json["newCases"];
+    newDeaths = json["newDeaths"];
   }
 }

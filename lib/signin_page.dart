@@ -1,6 +1,7 @@
 import 'dart:convert';
 //import 'dart:js';
 
+import 'admin.dart';
 import 'main.dart';
 import 'package:flutter/material.dart';
 import 'mainPage/enter.dart';
@@ -259,13 +260,21 @@ class _SignInState extends State<SignIn> {
         //  });
 
         prefs.setString("token",jasonData['jwtToken']);
-        // prefs.setString("username",jasonData['user']["userName"]);
-
-        Navigator.push(contextt, MaterialPageRoute(
-          builder: (context) {
-            return front();//change it to main page not wellcome , wellcome to test only
-          },
-        ));
+        //prefs.setString("role",jasonData['user']["role"]["roleName"]);
+        print(jasonData['user']["role"]["roleName"]);
+        if(jasonData['user']["role"]["roleName"] == 'User') {
+          Navigator.push(contextt, MaterialPageRoute(
+            builder: (context) {
+              return front(); //change it to main page not wellcome , wellcome to test only
+            },
+          ));
+        }if(jasonData['user']["role"]["roleName"] == 'Admin') {
+          Navigator.push(contextt, MaterialPageRoute(
+            builder: (context) {
+              return admin(); //change it to main page not wellcome , wellcome to test only
+            },
+          ));
+        }
       } else {
         //  setState(() {
         //    _isLoading=false;

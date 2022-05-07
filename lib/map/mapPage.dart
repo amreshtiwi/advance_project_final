@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -55,15 +56,24 @@ class _State extends State<map> {
     // final jsonData = await rootBundle.rootBundle.loadString('assets/WHO-COVID-19-global-data.json');
     // final list = await json.decode(jsonData) as List<dynamic>;
     // return list.map((e) => countryModel.fromJson(e)).toList();
-    //SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    final response =await http.get(Uri.parse("http://localhost:8090/api/v1/covid/byDateReported/2022-04-06"));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token=(prefs.getString('token')??'');
+    final response =await http.get(Uri.parse("http://192.168.1.65:8090/api/v1/covid/byDateReported/2022-04-06"),
+      // Send authorization headers to the backend.
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer '+token,
+        "content-type": "application/json"
+      },
+    );
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
+
       final list = await json.decode(response.body) as List<dynamic>;
+      print(json.decode(response.body));
       return list.map((e) => countryModel.fromJson(e)).toList();
     } else {
+      print(response.statusCode);
       // If the server did not return a 200 OK response,
       // then throw an exception.
       throw Exception('Failed to load album');
