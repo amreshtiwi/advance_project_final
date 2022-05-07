@@ -3,6 +3,6 @@
 3    package="gabrimatic.info.restart" >
 4
 5    <uses-sdk android:minSdkVersion="16" />
-5-->C:\flutter\.pub-cache\hosted\pub.dartlang.org\restart_app-1.1.0\android\src\main\AndroidManifest.xml
+5-->C:\src\flutter\.pub-cache\hosted\pub.dartlang.org\restart_app-1.1.0\android\src\main\AndroidManifest.xml
 6
 7</manifest>

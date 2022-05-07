@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "D:\\ALL FOLDER\\advance project\\covid_project_final_v1\\advance_project_final\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v16\\values-v16.xml",
+            "outputFile": "D:\\BOOKS\\Advanced\\advanced_project\\Advance_Software_Covid19_project\\FrontEnd\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v16\\values-v16.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Hosny\\.gradle\\caches\\transforms-2\\files-2.1\\122df2e57d294d1a53db26bbc3b813c1\\core-1.6.0\\res\\values-v16\\values-v16.xml",
+                    "source": "C:\\Users\\Ammr6\\.gradle\\caches\\transforms-2\\files-2.1\\122df2e57d294d1a53db26bbc3b813c1\\core-1.6.0\\res\\values-v16\\values-v16.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

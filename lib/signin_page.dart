@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'main.dart';
 import 'package:flutter/material.dart';
+import 'mainPage/enter.dart';
 import 'pageone.dart';
 import 'package:covid_project/signup_page.dart';
 import 'package:http/http.dart' as http;
@@ -32,7 +33,7 @@ class _SignInState extends State<SignIn> {
       body: Column(
         children: <Widget>[
           Expanded(
-            flex: 2,
+            flex: 3,
             child: Container(
               margin: EdgeInsets.only(top: 10),
               decoration: BoxDecoration(
@@ -44,7 +45,7 @@ class _SignInState extends State<SignIn> {
             ),
           ),
           Expanded(
-              flex: 3,
+              flex: 5,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
@@ -75,7 +76,7 @@ class _SignInState extends State<SignIn> {
                     ),
                    // Spacer(),
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 20,top: 19),
+                      padding: const EdgeInsets.only(bottom: 20),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
@@ -262,7 +263,7 @@ class _SignInState extends State<SignIn> {
 
         Navigator.push(contextt, MaterialPageRoute(
           builder: (context) {
-            return wellcomsecreen();//change it to main page not wellcome , wellcome to test only
+            return front();//change it to main page not wellcome , wellcome to test only
           },
         ));
       } else {

@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import '../models/countryWithID.dart';
 List database = [
   /////////////////////////////////////////////
   {
@@ -129,12 +133,63 @@ class _topState extends State<top> {
 
   String text1 = "New Cases";
   String text2 = "New Deaths";
+  List <String> allcountry= [];
 
   static final DateTime now = DateTime.now();
   static final DateFormat formatter = DateFormat('yyyy-MM-dd');
   final String formatted =
       formatter.format(now); ///////////////////////////////
 
+  getCountryList() async{
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    //api/v1/Country
+    final response =await http.get(Uri.parse("http://localhost:8090/api/v1/Country"));
+    if (response.statusCode == 200) {
+      final list = await json.decode(response.body) as List<dynamic>;
+      // return list.map((e) => countryWithID.fromJson(e)).toList();
+      return list;
+    } else {
+      throw Exception('Failed to load album');
+    }
+  }
+getCumlative()async{
+    ////////////////////////////////
+}
+addingNewCases()async{ ///////////////////////////////////////////////////////////////
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  Map data = {'cases': cases, 'deathes': deaths, 'date': formatted , 'cumlativeCases': cases , 'cumlativeDthes': deaths };
+  var jasonData = null;
+  var response = await http.post(
+      Uri.parse("http://192.168.1.65:8090/api/v1/authenticate/authenticate"),
+      body: json.encode({
+        'userName': cases,
+        'userPassword': deaths,
+        'date': formatted ,
+        'cumlativeCases': cases ,
+        'cumlativeDthes': deaths
+      }),
+      headers: {"content-type": "application/json"});
+  if (response.statusCode == 200) {
+    print('acc succcess');
+    jasonData = json.decode(response.body);
+    if (jasonData != null) {
+      prefs.setString("token",jasonData['jwtToken']);
+    } else {
+      print(response.body);
+    }
+  }
+  else{
+    print(response.statusCode);
+    final snakbar =SnackBar(content: Text("adding new cases"));
+    ScaffoldMessenger.of(context).showSnackBar(snakbar);
+  }
+}
+
+  @override
+  void initState() {
+    super.initState();
+    allcountry = getCountryList();
+  }
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(left: 20, right: 20),
@@ -192,16 +247,7 @@ class _topState extends State<top> {
               margin: EdgeInsets.only(top: 40, bottom: 20),
               child: DropdownSearch<String>(
                 mode: Mode.BOTTOM_SHEET,
-                items: [
-                  /////////////////////////////////////////////
-                  "Brazil",
-                  "Italia",
-                  "Tunisia",
-                  'Canada',
-                  'Zraoua',
-                  'France',
-                  'Belgique'
-                ],
+                items: allcountry,
                 dropdownSearchDecoration: InputDecoration(
                   labelText: "Choose country",
                   contentPadding: EdgeInsets.fromLTRB(12, 12, 0, 0),
@@ -264,7 +310,7 @@ class _topState extends State<top> {
                       print(country); /////////////////////////
                       print(cases.text);
                       print(formatted); /////////////
-
+                      addingNewCases();
                       cases.clear();
                       deaths.clear();
                     }

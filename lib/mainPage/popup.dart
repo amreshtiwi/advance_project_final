@@ -1,6 +1,8 @@
-import 'package:covid_project/signIn.dart';
-import 'package:covid_project/signup.dart';
+// import 'package:covid_project/signIn.dart';
+// import 'package:covid_project/signup.dart';
 import 'package:flutter/material.dart';
+
+import '../map/mapPage.dart';
 
 var signed_up = true;
 List<PopupMenuEntry<MenuItem>> list = [];
@@ -41,19 +43,27 @@ class _poubState extends State<popup> {
 
   onSelected(BuildContext context, MenuItem item) {
     switch (item) {
-      case menuItems.signIn:
+      case menuItems.maps:
         Navigator.of(context).push(
           MaterialPageRoute(
               builder: (context) =>
-                  SignIn()), //////////////////////////////////////
+                  map(title: 'map',)), //////////////////////////////////////
         );
         break;
 
-      case menuItems.signUp:
+      case menuItems.maps:
         Navigator.of(context).push(
           MaterialPageRoute(
               builder: (context) =>
-                  signUp()), //////////////////////////////////////
+                  map(title: 'map',)), //////////////////////////////////////
+        );
+        break;
+
+      case menuItems.maps:
+        Navigator.of(context).push(
+          MaterialPageRoute(
+              builder: (context) =>
+                  map(title: 'map',)), //////////////////////////////////////
         );
         break;
     }

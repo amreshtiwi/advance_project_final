@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "D:\\ALL FOLDER\\advance project\\covid_project_final_v1\\advance_project_final\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-night-v8\\values-night-v8.xml",
+            "outputFile": "D:\\BOOKS\\Advanced\\advanced_project\\Advance_Software_Covid19_project\\FrontEnd\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-night-v8\\values-night-v8.xml",
             "map": [
                 {
-                    "source": "D:\\ALL FOLDER\\advance project\\covid_project_final_v1\\advance_project_final\\android\\app\\src\\main\\res\\values-night\\styles.xml",
+                    "source": "D:\\BOOKS\\Advanced\\advanced_project\\Advance_Software_Covid19_project\\FrontEnd\\android\\app\\src\\main\\res\\values-night\\styles.xml",
                     "from": {
                         "startLines": "3,14",
                         "startColumns": "4,4",

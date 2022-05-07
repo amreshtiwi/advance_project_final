@@ -10,35 +10,35 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/country.dart';
 
-void main() {
-  runApp(MyApp());
-}
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MediaQuery(
-      data: MediaQueryData(),
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: MyHomePage(title: 'Flutter Demo Home Page', ),
-      ),
-    );
-  }
-}
+// void main() {
+//   runApp(MyApp());
+// }
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MediaQuery(
+//       data: MediaQueryData(),
+//       child: MaterialApp(
+//         title: 'Flutter Demo',
+//         theme: ThemeData(
+//           primarySwatch: Colors.blue,
+//         ),
+//         home: map(title: 'Flutter Demo Home Page', ),
+//       ),
+//     );
+//   }
+// }
 
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+class map extends StatefulWidget {
+  map({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
   _State createState() => _State();
 }
 
-class _State extends State<MyHomePage> {
+class _State extends State<map> {
   late Future<List<countryModel>> futurePost;
   late MapZoomPanBehavior _zoomPanBehavior;
   late MapShapeSource dataSource;
