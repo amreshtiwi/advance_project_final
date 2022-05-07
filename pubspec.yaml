@@ -26,6 +26,9 @@ environment:
 # dependencies can be manually updated by changing the version numbers below to
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
+dependency_overrides:
+  pedantic: 1.10.0-nullsafety
+  
 dependencies:
   flutter:
     sdk: flutter
@@ -34,9 +37,15 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
+
   cupertino_icons: ^1.0.2
+  country_list_pick: ^1.0.1+5
+  syncfusion_flutter_charts: ^19.1.54
+  awesome_dialog: ^2.2.0
+  dropdown_search: ^3.0.1
 
 dev_dependencies:
+  flutter_native_splash: ^2.1.5
   flutter_test:
     sdk: flutter
   http: any
@@ -54,6 +63,11 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
+flutter_native_splash:
+  color: "#ffffff" 
+  image: images/5.png
+
+  
 flutter:
 
   # The following line ensures that the Material Icons font is
