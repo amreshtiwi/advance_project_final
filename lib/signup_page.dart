@@ -11,6 +11,7 @@ class SignUp extends StatefulWidget {
   State<SignUp> createState() => _SignUpState();
 }
      bool hiddenpaas=true;
+var erruname,errfname,errlname,erremail,errpass;
 class _SignUpState extends State<SignUp> {
   final TextEditingController usernameeController = new TextEditingController();
 
@@ -71,7 +72,8 @@ class _SignUpState extends State<SignUp> {
                               child: TextField(
                                 controller: usernameeController,
                                   decoration: InputDecoration(
-                            hintText: "USER NAME",
+                                    hintText: "USER NAME",
+                                    errorText: erruname,
                           )))
                         ],
                       ),
@@ -91,6 +93,7 @@ class _SignUpState extends State<SignUp> {
                                   controller: FirstnameController,
                                   decoration: InputDecoration(
                                     hintText: "First NAME",
+                                    errorText: errfname,
                                   )))
                         ],
                       ),
@@ -110,6 +113,7 @@ class _SignUpState extends State<SignUp> {
                                   controller: LastnameController,
                                   decoration: InputDecoration(
                                     hintText: "Last Name",
+                                    errorText: errlname,
                                   )))
                         ],
                       ),
@@ -127,8 +131,11 @@ class _SignUpState extends State<SignUp> {
 
                               child: TextField(
                                 controller: emailController,
+                                  keyboardType: TextInputType.emailAddress,
                                   decoration: InputDecoration(
                             hintText: "Email Address",
+                                    errorText: erremail,
+
                           )))
                         ],
                       ),
@@ -147,6 +154,7 @@ class _SignUpState extends State<SignUp> {
                               controller: passworddController,
                                 decoration: InputDecoration(
                                    hintText: "Password",
+                                  errorText: errpass,
                                   suffixIcon: InkWell(
                                     onTap: _toglepass,
                                     child: Icon(
@@ -168,8 +176,17 @@ class _SignUpState extends State<SignUp> {
                                 Navigator.push(context, MaterialPageRoute(
                                   builder: (context) {
                                     return SignIn();
+
+
                                   },
                                 ));
+                                setState(() {
+                                  erruname=null;
+                                  errfname=null;
+                                  errlname=null;
+                                  erremail=null;
+                                  errpass=null;
+                                });
                               },
                               //************************************************************************************** */
                               child: Container(
@@ -204,6 +221,74 @@ class _SignUpState extends State<SignUp> {
                             child: GestureDetector(
                               //*************************************************************************************** */
                               onTap: () {
+
+                                if(usernameeController.text.isEmpty)
+                                  {
+                                    setState(() {
+                                      erruname="Not valid Username";
+                                    });
+
+                                  }
+                                else
+                                  {
+                                  setState(() {
+                                  erruname=null;
+                                  });
+                                  }
+                                 if(FirstnameController.text.isEmpty)
+                                  {
+                                    setState(() {
+                                      errfname="Not valid Firstname";
+                                    });
+
+                                  }
+                                 else
+                                 {
+                                   setState(() {
+                                     errfname=null;
+                                   });
+                                 }
+                                 if(LastnameController.text.isEmpty)
+                                  {
+                                    setState(() {
+                                      errlname="Not valid Lastname";
+
+                                    });
+
+                                  }
+                                 else
+                                 {
+                                   setState(() {
+                                     errlname=null;
+                                   });
+                                 }
+                                 if(emailController.text.isEmpty)
+                                  {
+                                    setState(() {
+                                      erremail="Not valid Email";
+                                    });
+
+                                  }
+                                 else
+                                 {
+                                   setState(() {
+                                     erremail=null;
+                                   });
+                                 }
+                                 if(passworddController.text.isEmpty)
+                                  {
+                                    setState(() {
+                                      errpass="Not valid Password";
+                                    });
+
+                                  }
+
+                                else
+                                  {
+                                  setState(() {
+                                    errpass=null;
+                                  });
+                                  }
                                 // signup(context)
                                 print("hi im hosny");
                                   signup( usernameeController.text,
@@ -262,6 +347,16 @@ class _SignUpState extends State<SignUp> {
     if(response.statusCode==200)
   {
     print('account is creted ');
+
+    usernameeController.text="";
+    FirstnameController.text="";
+    LastnameController.text="";
+    emailController.text="";
+    passworddController.text="";
+
+    final snakbar =SnackBar(content: Text("Account is Created"));
+    ScaffoldMessenger.of(context).showSnackBar(snakbar);
+
   }
 else{
   print(response.statusCode);

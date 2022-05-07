@@ -15,7 +15,10 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   bool hiddenpaas =true;
+  var errorpass;
+  var errorname;
 
+  var _formkey = GlobalKey<FormState>();
   final TextEditingController usernameController = new TextEditingController();
 
   final TextEditingController passwordController = new TextEditingController();
@@ -72,7 +75,7 @@ class _SignInState extends State<SignIn> {
                     ),
                    // Spacer(),
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 20,top: 50),
+                      padding: const EdgeInsets.only(bottom: 20,top: 19),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
@@ -85,6 +88,8 @@ class _SignInState extends State<SignIn> {
                                   controller: usernameController,
                                   decoration: InputDecoration(
                                     hintText: "Username",
+                                    errorText: errorname,
+
                                   )))
                         ],
                       ),
@@ -102,6 +107,7 @@ class _SignInState extends State<SignIn> {
                                 controller: passwordController,
                                 decoration: InputDecoration(
                                   hintText: "Password",
+                                  errorText:errorpass,
                                   suffixIcon: InkWell(
                                     onTap: _toglepass,
                                     child: Icon(
@@ -122,6 +128,9 @@ class _SignInState extends State<SignIn> {
                             child: GestureDetector(
                               //*************************************************************************************** */
                               onTap: () {
+
+                                final snakbar =SnackBar(content: Text("go to wellcom page"));
+                                ScaffoldMessenger.of(context).showSnackBar(snakbar);
 
                                 Navigator.push(context, MaterialPageRoute(
                                   builder: (context) {
@@ -167,6 +176,32 @@ class _SignInState extends State<SignIn> {
                               onTap: () {
                                 signin(usernameController.text,
                                     passwordController.text, context);
+                                if(usernameController.text.isEmpty)
+                                  {
+                                    setState(() {
+                                      errorname='Not valid username';
+                                    });
+                                  }
+                                else
+                                {
+                                  setState(() {
+                                    errorname=null;
+                                  });
+                                }
+                                if(passwordController.text.isEmpty)
+                                  {
+                                    setState(() {
+                                      errorpass='Not valid password';
+                                    });
+                                  }
+                                else
+                                  {
+                                    setState(() {
+                                      errorpass=null;
+                                    });
+                                  }
+
+
                                 print('hello world');
                               },
                               //************************************************************************************** */
@@ -211,6 +246,7 @@ class _SignInState extends State<SignIn> {
 
     if (response.statusCode == 200) {
       print('acc succcess');
+
       //var data =jasonData(response.body.toString());
       //print(data);
       jasonData = json.decode(response.body);
@@ -239,6 +275,10 @@ class _SignInState extends State<SignIn> {
     }
     else{
       print(response.statusCode);
+
+      final snakbar =SnackBar(content: Text("Username or password is Wrong"));
+      ScaffoldMessenger.of(context).showSnackBar(snakbar);
+
     }
   }
 
