@@ -232,9 +232,7 @@ class _SignInState extends State<SignIn> {
   }
 
   signin(String username, String password, BuildContext contextt) async {
-    print('potato');
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
     Map data = {'userName': username, 'userPassword': password};
 
     var jasonData = null;
@@ -271,7 +269,7 @@ class _SignInState extends State<SignIn> {
         }if(jasonData['user']["role"]["roleName"] == 'Admin') {
           Navigator.push(contextt, MaterialPageRoute(
             builder: (context) {
-              return admin(); //change it to main page not wellcome , wellcome to test only
+              return new admin(AdminName: username,); //change it to main page not wellcome , wellcome to test only
             },
           ));
         }

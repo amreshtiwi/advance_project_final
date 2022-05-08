@@ -10,9 +10,18 @@ import '../models/countryWithID.dart';
 import 'models/country.dart';
 List <countryModel> _lastupdate =[];
 
-class admin extends StatelessWidget {
+class admin extends StatefulWidget {
+  String AdminName;
+  admin({Key? key, required this.AdminName}) : super(key: key);
+  @override
+  State<admin> createState() => _adminState();
+}
+
+class _adminState extends State<admin> {
   List <countryWithID> _allupdate =[];
+
   List <String> justCountryName = [] ;
+
   List <String> justCountryID = [] ;
 
   Future<List<countryWithID>> getCountryList() async{
@@ -33,6 +42,7 @@ class admin extends StatelessWidget {
       throw Exception('Failed to load album');
     }
   }
+
   Future<List<countryModel>> readJson() async{
     // final jsonData = await rootBundle.rootBundle.loadString('assets/WHO-COVID-19-global-data.json');
     // final list = await json.decode(jsonData) as List<dynamic>;
@@ -87,6 +97,7 @@ class admin extends StatelessWidget {
             body: SingleChildScrollView(child: top(
                 justCountryName:justCountryName,
               justCountryCode: justCountryID,
+              AdminName: widget.AdminName,
             )));
       }else if (snapshot.hasError){
         print(snapshot.error);
@@ -109,17 +120,22 @@ class admin extends StatelessWidget {
 class top extends StatefulWidget {
   List <String> justCountryName = [] ;
   List <String> justCountryCode = [] ;
+  String AdminName;
   top({Key? key,required this.justCountryName ,
-    required this.justCountryCode ,}) : super(key: key);
+    required this.justCountryCode ,
+    required this.AdminName}) : super(key: key);
 
   @override
   State<top> createState() => _topState();
 }
 
 class _topState extends State<top> {
-  @override
-  String $Admin_name = "Ahmad";
 
+  String $Admin_name = "Ahmad";
+  setAdminName() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    $Admin_name = prefs.getString('Aname').toString();
+  }
   ////////////////////////////////////////////// admin name
   TextEditingController deaths = new TextEditingController();
 
@@ -144,17 +160,19 @@ class _topState extends State<top> {
 
 
 addingNewCases()async{ ///////////////////////////////////////////////////////////////
+  int casess = int.parse(cases.text);
+  int deathess = int.parse(deaths.text);
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String token=(prefs.getString('token')??'');
   var jasonData = null;
   var response = await http.post(
       Uri.parse("http://192.168.1.65:8090/api/v1/covid/addCovid"),
       body: json.encode({
-        'newCases': int.parse(cases.text),
-        'newDeaths':  int.parse(deaths.text),
+        'newCases': casess,//int.parse(cases.text),
+        'newDeaths':  deathess,
         'dateReported': formatted ,
-        'cumulativeCases': int.parse(cases.text),
-        'cumulativeDeaths': int.parse(deaths.text),
+        'cumulativeCases': casess,
+        'cumulativeDeaths': deathess,
         'country':{
           'id': code,
           'name' : country
@@ -180,6 +198,13 @@ addingNewCases()async{ /////////////////////////////////////////////////////////
   }
 }
 
+  @override
+  void initState() {
+    print("again bro ?");
+    super.initState();
+    setAdminName();
+  }
+  @override
   Widget build(BuildContext context) {
     return Container(
 
@@ -193,7 +218,7 @@ addingNewCases()async{ /////////////////////////////////////////////////////////
             width: 200,
             margin: EdgeInsets.only(top: 30, bottom: 50),
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text("Hi " + $Admin_name, style: TextStyle(fontSize: 20)),
+              Text("Hi " + widget.AdminName, style: TextStyle(fontSize: 20)),
               Icon(Icons.waving_hand,
                   size: 20, color: Color.fromARGB(255, 204, 137, 47)),
             ])),
@@ -357,7 +382,6 @@ class search extends SearchDelegate {
         .where((element) => element.country.toString().startsWith(query))
         .toList();
 
-    print("hi this is line 346" + view.toString());
     return Column(
       children: [
         Container(
