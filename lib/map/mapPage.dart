@@ -68,7 +68,7 @@ class _State extends State<map> {
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
-
+      print(json.decode(response.body));
       final list = await json.decode(response.body) as List<dynamic>;
       print(json.decode(response.body));
       return list.map((e) => countryModel.fromJson(e)).toList();
@@ -139,7 +139,7 @@ class _State extends State<map> {
                   bottom: Radius.circular(20.0)
                 ),
               ),
-              backgroundColor: Color(0xff72A9AF),
+              backgroundColor: Color(0xff342524),
             ),
             body: Padding(
               padding: EdgeInsets.fromLTRB(0,0, 0, 0),

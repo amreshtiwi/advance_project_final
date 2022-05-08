@@ -22,51 +22,96 @@ class front extends StatefulWidget {
 }
 
 class _frontState extends State<front> {
+  late Future<List<countryModel>> futurePost;
+  List <countryModel> _allupdate =[];
+  var newCases;
+  var newDeaths;
+  var cumlativeDeathes;
+  var cumlativeCases;
   String contryCode = "AF";
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          leadingWidth: 100,
-          leading: CountryListPick(
-              appBar: AppBar(
-                backgroundColor: Colors.blue,
-                title: Text('Select Country'),
-              ),
-              theme: CountryTheme(
-                isShowFlag: true,
-                isShowTitle: false,
-                isShowCode: false,
-                isDownIcon: false,
-                showEnglishName: true,
-              ),
-              initialSelection: contryCode,
-              onChanged: (CountryCode) {
-                setState(() {
-                  contryCode = CountryCode!.code.toString();
-                });
-                print(CountryCode
-                    ?.code); ////////////////////////////// country name
-                getinfo(contryCode);
-              },
-              useUiOverlay: true,
-              useSafeArea: false),
-          title: Text("COVID_19", style: TextStyle(fontSize: 30)),
-          centerTitle: true,
-          backgroundColor: Color.fromARGB(255, 35, 35, 35),
-          actions: [
-            popup(),
-          ],
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [cards(), Chart()],
-          ),
-        ));
+  void initState() {
+    print("again bro ?");
+    super.initState();
+    futurePost = getinfo(contryCode);
   }
 
-  getinfo(String contryCode) async {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<countryModel>>(
+        future: getinfo(contryCode),
+      builder: (context,data) {
+          if(data.hasData) {
+            _allupdate = data.data as List<countryModel>;
+            newCases = _allupdate[0].newCases;
+            newDeaths = _allupdate[0].newDeaths;
+            cumlativeCases = _allupdate[0].cumCases;
+            cumlativeDeathes = _allupdate[0].cumDeaths;
+            print(newCases.toString() +"---"+newDeaths.toString()+"---"+cumlativeCases.toString()+"---"+cumlativeDeathes.toString());
+            return Scaffold(
+                backgroundColor: Color(0xff72A9AF),
+                appBar: AppBar(
+                  leadingWidth: 100,
+                  leading: CountryListPick(
+                      appBar: AppBar(
+                        backgroundColor: Color(0xff342524),
+                        title: Text('Select Country'),
+                      ),
+                      theme: CountryTheme(
+                        isShowFlag: true,
+                        isShowTitle: false,
+                        isShowCode: false,
+                        isDownIcon: false,
+                        showEnglishName: true,
+                      ),
+                      initialSelection: contryCode,
+                      onChanged: (CountryCode) {
+                        setState(() {
+                          contryCode = CountryCode!.code.toString();
+                        });
+                        print(CountryCode
+                            ?.code); ////////////////////////////// country name
+                        //getinfo(contryCode);
+                      },
+                      useUiOverlay: true,
+                      useSafeArea: false),
+                  title: Text("COVID_19", style: TextStyle(fontSize: 30)),
+                  centerTitle: true,
+                  backgroundColor: Color(0xff342524),
+                  actions: [
+                    popup(),
+                  ],
+                ),
+                body: SingleChildScrollView(
+                  child: Column(
+                    children: [cards(newCases: newCases,
+                                      newDeaths: newDeaths,
+                                      cumlativeCases: cumlativeCases,
+                                      cumlativeDeaths: cumlativeDeathes,),
+                      Chart(newCases: newCases,
+                        newDeaths: newDeaths,
+                        cumlativeCases: cumlativeCases,
+                        cumlativeDeaths: cumlativeDeathes,)],
+                  ),
+                ));
+          }else if (data.hasError){
+            print(data.error);
+            return Text(
+              "${data.error}",
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+            );
+          }else{
+            print('fitching');//delete this ----------------------------
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+      }
+    );
+  }
+
+  Future<List<countryModel>> getinfo(String contryCode) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = (prefs.getString('token') ?? '');
     final response = await http.get(

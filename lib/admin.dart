@@ -7,110 +7,110 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../models/countryWithID.dart';
-List database = [
-  /////////////////////////////////////////////
-  {
-    'Country': "palestine",
-    'new_death': 20,
-    'new_cases': 10,
-    'Cumulative_cases': 30,
-    'Cumulative_deaths': 20,
-    'Date': "2021-09-12"
-  },
-  {
-    'Country': "palestine",
-    'new_death': 20,
-    'new_cases': 10,
-    'Cumulative_cases': 30,
-    'Cumulative_deaths': 20,
-    'Date': "2021-09-12"
-  },
-  {
-    'Country': "palestine",
-    'new_death': 20,
-    'new_cases': 10,
-    'Cumulative_cases': 30,
-    'Cumulative_deaths': 20,
-    'Date': "2021-09-12"
-  },
-  {
-    'Country': "palestine",
-    'new_death': 20,
-    'new_cases': 10,
-    'Cumulative_cases': 30,
-    'Cumulative_deaths': 20,
-    'Date': "2021-09-12"
-  },
-  {
-    'Country': "Egypt",
-    'new_death': 20,
-    'new_cases': 10,
-    'Cumulative_cases': 30,
-    'Cumulative_deaths': 20,
-    'Date': "2021-09-12"
-  },
-  {
-    'Country': "USA",
-    'new_death': 20,
-    'new_cases': 10,
-    'Cumulative_cases': 30,
-    'Cumulative_deaths': 20,
-    'Date': "2021-09-12"
-  },
-  {
-    'Country': "palestine",
-    'new_death': 20,
-    'new_cases': 10,
-    'Cumulative_cases': 30,
-    'Cumulative_deaths': 20,
-    'Date': "2021-09-12"
-  },
-  {
-    'Country': "Algeria",
-    'new_death': 20,
-    'new_cases': 10,
-    'Cumulative_cases': 30,
-    'Cumulative_deaths': 20,
-    'Date': "2021-09-12"
-  },
-  {
-    'Country': "China",
-    'new_death': 20,
-    'new_cases': 10,
-    'Cumulative_cases': 30,
-    'Cumulative_deaths': 20,
-    'Date': "2021-09-12"
-  },
-  {
-    'Country': "palestine",
-    'new_death': 20,
-    'new_cases': 10,
-    'Cumulative_cases': 30,
-    'Cumulative_deaths': 20,
-    'Date': "2021-09-12"
-  }
-];
+import 'models/country.dart';
+List <countryModel> _lastupdate =[];
 
 class admin extends StatelessWidget {
+  List <countryWithID> _allupdate =[];
+  List <String> justCountryName = [] ;
+  List <String> justCountryID = [] ;
+
+  Future<List<countryWithID>> getCountryList() async{
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    //api/v1/Country
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token=(prefs.getString('token')??'');
+    final response =await http.get(Uri.parse("http://192.168.1.65:8090/api/v1/Country/all"),
+      // Send authorization headers to the backend.
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer '+token,
+        "content-type": "application/json"
+      },);
+    if (response.statusCode == 200) {
+      final list = await json.decode(response.body) as List<dynamic>;
+      return list.map((e) => countryWithID.fromJson(e)).toList();
+    } else {
+      throw Exception('Failed to load album');
+    }
+  }
+  Future<List<countryModel>> readJson() async{
+    // final jsonData = await rootBundle.rootBundle.loadString('assets/WHO-COVID-19-global-data.json');
+    // final list = await json.decode(jsonData) as List<dynamic>;
+    // return list.map((e) => countryModel.fromJson(e)).toList();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token=(prefs.getString('token')??'');
+    final response =await http.get(Uri.parse("http://192.168.1.65:8090/api/v1/covid/byDateReported/2022-04-06"),
+      // Send authorization headers to the backend.
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer '+token,
+        "content-type": "application/json"
+      },
+    );
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+
+      final list = await json.decode(response.body) as List<dynamic>;
+      return list.map((e) => countryModel.fromJson(e)).toList();
+    } else {
+      print(response.statusCode);
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load album');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          actions: [
-            IconButton(
-                onPressed: () {
-                  showSearch(context: context, delegate: search());
-                },
-                icon: Icon(Icons.search))
-          ],
-          backgroundColor: Color.fromARGB(255, 35, 35, 35),
-        ),
-        body: SingleChildScrollView(child: top()));
+    return FutureBuilder(
+      future: Future.wait([getCountryList(), readJson()]),
+      builder: (context,AsyncSnapshot <List<dynamic>> snapshot) {
+      if(snapshot.hasData) {
+        _allupdate = snapshot.data![0] as List<countryWithID>;
+        for(var i = 0 ; i < _allupdate.length ; i++){
+          //justCountryName[i] = _allupdate[i].name!;
+          justCountryName.insert(i, _allupdate[i].name!);
+          justCountryID.insert(i, _allupdate[i].code!);
+        }
+        _lastupdate = snapshot.data![1] as List<countryModel>;
+        return Scaffold(
+            appBar: AppBar(
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      showSearch(context: context, delegate: search());
+                    },
+                    icon: Icon(Icons.search))
+              ],
+              backgroundColor: Color(0xff342524),
+            ),
+            body: SingleChildScrollView(child: top(
+                justCountryName:justCountryName,
+              justCountryCode: justCountryID,
+            )));
+      }else if (snapshot.hasError){
+        print(snapshot.error);
+        return Text(
+          "${snapshot.error}",
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+        );
+      }else{
+        print('fitching');//delete this ----------------------------
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      }
+      }
+    );
   }
 }
 
 class top extends StatefulWidget {
-  top({Key? key}) : super(key: key);
+  List <String> justCountryName = [] ;
+  List <String> justCountryCode = [] ;
+  top({Key? key,required this.justCountryName ,
+    required this.justCountryCode ,}) : super(key: key);
 
   @override
   State<top> createState() => _topState();
@@ -128,42 +128,21 @@ class _topState extends State<top> {
 
   ///////////////////////////////////////// cases num
 
-  String country = "Brazil";
+  String country = "Afghanistan";
+  String code = "AF";
 
   /////////////////////////////////////////// country name
 
   String text1 = "New Cases";
   String text2 = "New Deaths";
-  List <String> allcountry= [];
 
   static final DateTime now = DateTime.now();
   static final DateFormat formatter = DateFormat('yyyy-MM-dd');
   final String formatted =
       formatter.format(now); ///////////////////////////////
 
-  getCountryList() async{
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    //api/v1/Country
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token=(prefs.getString('token')??'');
-    final response =await http.get(Uri.parse("http://192.168.1.65:8090/api/v1/Country/all"),
-      // Send authorization headers to the backend.
-      headers: {
-        HttpHeaders.authorizationHeader: 'Bearer '+token,
-        "content-type": "application/json"
-      },);
-    if (response.statusCode == 200) {
-      print(response.body);
-      final list = await json.decode(response.body) as List<dynamic>;
-      // return list.map((e) => countryWithID.fromJson(e)).toList();
-      return list;
-    } else {
-      throw Exception('Failed to load album');
-    }
-  }
-getCumlative()async{
-    ////////////////////////////////
-}
+
+
 addingNewCases()async{ ///////////////////////////////////////////////////////////////
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String token=(prefs.getString('token')??'');
@@ -171,11 +150,15 @@ addingNewCases()async{ /////////////////////////////////////////////////////////
   var response = await http.post(
       Uri.parse("http://192.168.1.65:8090/api/v1/covid/addCovid"),
       body: json.encode({
-        'newCases': cases,
-        'newDeaths': deaths,
+        'newCases': int.parse(cases.text),
+        'newDeaths':  int.parse(deaths.text),
         'dateReported': formatted ,
-        'cumulativeCases': cases ,
-        'cumulativeDeaths': deaths
+        'cumulativeCases': int.parse(cases.text),
+        'cumulativeDeaths': int.parse(deaths.text),
+        'country':{
+          'id': code,
+          'name' : country
+        }
       }),
     headers: {
       HttpHeaders.authorizationHeader: 'Bearer '+token,
@@ -183,7 +166,6 @@ addingNewCases()async{ /////////////////////////////////////////////////////////
     },);
   if (response.statusCode == 200) {
     print('acc succcess');
-    jasonData = json.decode(response.body);
     if (jasonData != null) {
       prefs.setString("token",jasonData['jwtToken']);
     } else {
@@ -192,20 +174,17 @@ addingNewCases()async{ /////////////////////////////////////////////////////////
   }
   else{
     print(response.statusCode);
+    print(response.body);
     final snakbar =SnackBar(content: Text("adding new cases"));
     ScaffoldMessenger.of(context).showSnackBar(snakbar);
   }
 }
 
-  @override
-  void initState() {
-    super.initState();
-    allcountry = getCountryList();
-  }
   Widget build(BuildContext context) {
     return Container(
+
       padding: EdgeInsets.only(left: 20, right: 20),
-      color: Color.fromARGB(255, 255, 255, 255),
+      color: Color(0xff72A9AF),
       child: Column(children: [
         Image(
           image: AssetImage('images/logo.png'),
@@ -259,7 +238,7 @@ addingNewCases()async{ /////////////////////////////////////////////////////////
               margin: EdgeInsets.only(top: 40, bottom: 20),
               child: DropdownSearch<String>(
                 mode: Mode.BOTTOM_SHEET,
-                items: allcountry,
+                items: widget.justCountryName,
                 dropdownSearchDecoration: InputDecoration(
                   labelText: "Choose country",
                   contentPadding: EdgeInsets.fromLTRB(12, 12, 0, 0),
@@ -267,11 +246,18 @@ addingNewCases()async{ /////////////////////////////////////////////////////////
                 ),
                 onChanged: (CountryCode) {
                   setState(() {
-                    country = CountryCode!;
+                    country = CountryCode.toString();
                     ///// country name
+                    for(var i = 0 ; i < widget.justCountryName.length ; i++){
+                      if(widget.justCountryName[i] == CountryCode.toString() ){
+                        code = widget.justCountryCode[i];
+                        break;
+                      }
+                    }
                   });
+                  print(CountryCode);
                 },
-                selectedItem: "Brazil",
+                selectedItem: country,
                 showSearchBox: true,
                 searchFieldProps: TextFieldProps(
                   decoration: InputDecoration(
@@ -314,7 +300,7 @@ addingNewCases()async{ /////////////////////////////////////////////////////////
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size(120, 50),
                     textStyle: TextStyle(fontSize: 20),
-                    primary: Color.fromARGB(255, 35, 35, 35),
+                    primary: Color(0xffD98A28),
                   ),
                   onPressed: () {
                     if (deaths.text != "" && cases.text != "") {
@@ -337,6 +323,7 @@ addingNewCases()async{ /////////////////////////////////////////////////////////
 }
 
 class search extends SearchDelegate {
+
   @override
   List s = ["", ""];
   List<Widget>? buildActions(BuildContext context) {
@@ -366,10 +353,11 @@ class search extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    List view = database
-        .where((element) => element['Country'].startsWith(query))
+    List <countryModel> view = _lastupdate
+        .where((element) => element.country.toString().startsWith(query))
         .toList();
 
+    print("hi this is line 346" + view.toString());
     return Column(
       children: [
         Container(
@@ -395,7 +383,7 @@ class search extends SearchDelegate {
             margin: EdgeInsets.only(top: 20, left: 5, right: 5),
             child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: query == "" ? database.length : view.length,
+                itemCount: query == "" ? _lastupdate.length : view.length,
                 itemBuilder: ((context, i) {
                   return Container(
                     padding: EdgeInsets.all(10),
@@ -410,46 +398,44 @@ class search extends SearchDelegate {
                                     margin: EdgeInsets.only(right: 15),
                                     width: 80,
                                     child: Text(
-                                      database[i]['Country'],
+                                      _lastupdate[i].country.toString(),
                                       style: TextStyle(
-                                          fontSize: 17, color: Colors.white),
+                                          fontSize: 10, color: Colors.white),
                                     )),
                                 Expanded(
                                     flex: 1,
                                     child: Text(
-                                      database[i]['new_death'].toString(),
+                                      _lastupdate[i].newDeaths.toString(),
                                       style: TextStyle(
-                                          fontSize: 17, color: Colors.white),
+                                          fontSize: 10, color: Colors.white),
                                     )),
                                 Expanded(
                                     flex: 1,
                                     child: Text(
-                                      database[i]['new_cases'].toString(),
+                                      _lastupdate[i].newCases.toString(),
                                       style: TextStyle(
-                                          fontSize: 17, color: Colors.white),
+                                          fontSize: 10, color: Colors.white),
                                     )),
                                 Expanded(
                                     flex: 1,
                                     child: Text(
-                                      database[i]['Cumulative_cases']
-                                          .toString(),
+                                    _lastupdate[i].cumCases.toString(),
                                       style: TextStyle(
-                                          fontSize: 17, color: Colors.white),
+                                          fontSize: 10, color: Colors.white),
                                     )),
                                 Expanded(
                                     flex: 1,
                                     child: Text(
-                                      database[i]['Cumulative_deaths']
-                                          .toString(),
+                                      _lastupdate[i].cumDeaths.toString(),
                                       style: TextStyle(
-                                          fontSize: 17, color: Colors.white),
+                                          fontSize: 10, color: Colors.white),
                                     )),
                                 Expanded(
                                     flex: 1,
                                     child: Text(
-                                      database[i]['Date'],
+                                      _lastupdate[i].date.toString(),
                                       style: TextStyle(
-                                          fontSize: 17, color: Colors.white),
+                                          fontSize: 10, color: Colors.white),
                                     )),
                               ])
                         : Row(
@@ -459,44 +445,44 @@ class search extends SearchDelegate {
                                     width: 80,
                                     margin: EdgeInsets.only(right: 10),
                                     child: Text(
-                                      view[i]['Country'],
+                                      view[i].country.toString(),
                                       style: TextStyle(
-                                          fontSize: 17, color: Colors.white),
+                                          fontSize: 10, color: Colors.white),
                                     )),
                                 Expanded(
                                     flex: 1,
                                     child: Text(
-                                      view[i]['new_death'].toString(),
+                                      view[i].newDeaths.toString(),
                                       style: TextStyle(
-                                          fontSize: 17, color: Colors.white),
+                                          fontSize: 10, color: Colors.white),
                                     )),
                                 Expanded(
                                     flex: 1,
                                     child: Text(
-                                      view[i]['new_cases'].toString(),
+                                      view[i].cumCases.toString(),
                                       style: TextStyle(
-                                          fontSize: 17, color: Colors.white),
+                                          fontSize: 10, color: Colors.white),
                                     )),
                                 Expanded(
                                     flex: 1,
                                     child: Text(
-                                      view[i]['Cumulative_cases'].toString(),
+                                      view[i].cumCases.toString(),
                                       style: TextStyle(
-                                          fontSize: 17, color: Colors.white),
+                                          fontSize: 10, color: Colors.white),
                                     )),
                                 Expanded(
                                     flex: 1,
                                     child: Text(
-                                      view[i]['Cumulative_deaths'].toString(),
+                                      view[i].newDeaths.toString(),
                                       style: TextStyle(
-                                          fontSize: 17, color: Colors.white),
+                                          fontSize: 10, color: Colors.white),
                                     )),
                                 Expanded(
                                     flex: 1,
                                     child: Text(
-                                      view[i]['Date'],
+                                      view[i].date.toString(),
                                       style: TextStyle(
-                                          fontSize: 17, color: Colors.white),
+                                          fontSize: 10, color: Colors.white),
                                     )),
                               ]),
                   );

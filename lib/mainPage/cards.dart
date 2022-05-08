@@ -1,24 +1,24 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class cards extends StatefulWidget {
+  var newCases;
+  var newDeaths;
+  var cumlativeCases;
+  var cumlativeDeaths;
+  cards ({ Key? key,required this.newCases ,
+    required this.newDeaths,
+    required this.cumlativeCases,
+    required this.cumlativeDeaths }): super(key: key);
+
   @override
   State<cards> createState() => _cardsState();
 }
 
 class _cardsState extends State<cards> {
-  var confirmed_num; ///////////////////////////////////////////
-  var recoveries_num;
-  var decreased_num;
-  var country_num;
-
-  var confirmed_percent; //////////////////////////////////////////////
-  var recoveries_percent;
-  var decreased_percent;
-  var country_percent;
 
   @override
   Widget build(BuildContext context) {
@@ -58,17 +58,17 @@ class _cardsState extends State<cards> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
                                   children: [
-                                    Text("$confirmed_num",
+                                    Text(widget.newCases.toString(),
                                         style: TextStyle(
-                                            fontSize: 30,
+                                            fontSize: 24,
                                             fontWeight: FontWeight.bold)),
                                     Text(
-                                      "(+$confirmed_percent%)",
+                                      ((widget.newCases/widget.cumlativeCases)*100).toStringAsFixed(2)+"%",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16),
                                     ),
-                                    Text("Confirmed",
+                                    Text("Cases",
                                         style: TextStyle(fontSize: 18)),
                                   ],
                                 ),
@@ -108,15 +108,15 @@ class _cardsState extends State<cards> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
                                   children: [
-                                    Text("$recoveries_num",
+                                    Text(widget.newDeaths.toString(),
                                         style: TextStyle(
-                                            fontSize: 30,
+                                            fontSize: 24,
                                             fontWeight: FontWeight.bold)),
-                                    Text("(+$recoveries_percent%)",
+                                    Text(((widget.newDeaths/widget.cumlativeDeaths)*100).toStringAsFixed(2)+"%",
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold)),
-                                    Text("Recoveries",
+                                    Text("Deaths",
                                         style: TextStyle(fontSize: 18)),
                                   ],
                                 ),
@@ -164,15 +164,11 @@ class _cardsState extends State<cards> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceAround,
                                     children: [
-                                      Text("$decreased_num",
+                                      Text(widget.cumlativeCases.toString(),
                                           style: TextStyle(
-                                              fontSize: 30,
+                                              fontSize: 24,
                                               fontWeight: FontWeight.bold)),
-                                      Text("(+$decreased_percent%)",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16)),
-                                      Text("Death",
+                                      Text("Cumulative cases",
                                           style: TextStyle(fontSize: 18)),
                                     ],
                                   ),
@@ -213,20 +209,13 @@ class _cardsState extends State<cards> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceAround,
                                     children: [
-                                      Text(
-                                        "$country_num/168",
+                                      Text(widget.cumlativeDeaths.toString(),
                                         style: TextStyle(
-                                          fontSize: 26,
+                                          fontSize: 24,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      Text(
-                                        "(+$country_percent%)",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text("Countries",
+                                      Text("Cumulative deaths",
                                           style: TextStyle(fontSize: 18)),
                                     ],
                                   ),
