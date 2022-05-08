@@ -4,6 +4,8 @@ import 'package:covid_project/pageone.dart';
 import 'package:flutter/src/material/text_theme.dart';
 import 'package:covid_project/signup_page.dart';
 
+import 'mainPage/enter.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -12,6 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'covid project',
       theme: ThemeData(
         primaryColor: prcolor,
@@ -47,7 +50,7 @@ class wellcomsecreen extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                 image: AssetImage("images/6.png"),
+                  image: AssetImage("images/6.png"),
                   fit: BoxFit.cover,
                   //  scale: 12,
                 ),

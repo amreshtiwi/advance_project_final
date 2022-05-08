@@ -2,9 +2,9 @@
 // import 'package:covid_project/signup.dart';
 import 'package:flutter/material.dart';
 
+import '../main.dart';
 import '../map/mapPage.dart';
 
-var signed_up = true;
 List<PopupMenuEntry<MenuItem>> list = [];
 
 class popup extends StatefulWidget {
@@ -18,16 +18,12 @@ class _poubState extends State<popup> {
     return PopupMenuButton<MenuItem>(
       onSelected: (item) => onSelected(context, item),
       itemBuilder: (context) {
-        signed_up
-            ? list = [
-                ...menuItems.itemsFirst.map(buildItem).toList(),
-                PopupMenuDivider(),
-                ...menuItems.itemsSecond.map(buildItem).toList()
-              ]
-            : list = [
-                ...menuItems.itemsFirst.map(buildItem).toList(),
-                PopupMenuDivider(),
-              ];
+        list = [
+          ...menuItems.itemsFirst.map(buildItem).toList(),
+          PopupMenuDivider(),
+          ...menuItems.itemsSecond.map(buildItem).toList()
+        ];
+
         return list;
       },
     );
@@ -46,24 +42,17 @@ class _poubState extends State<popup> {
       case menuItems.maps:
         Navigator.of(context).push(
           MaterialPageRoute(
-              builder: (context) =>
-                  map(title: 'map',)), //////////////////////////////////////
+              builder: (context) => map(
+                    title: 'map',
+                  )), //////////////////////////////////////
         );
         break;
 
-      case menuItems.maps:
+      case menuItems.signOut:
         Navigator.of(context).push(
           MaterialPageRoute(
               builder: (context) =>
-                  map(title: 'map',)), //////////////////////////////////////
-        );
-        break;
-
-      case menuItems.maps:
-        Navigator.of(context).push(
-          MaterialPageRoute(
-              builder: (context) =>
-                  map(title: 'map',)), //////////////////////////////////////
+                  wellcomsecreen()), //////////////////////////////////////
         );
         break;
     }
@@ -83,15 +72,11 @@ class MenuItem {
 class menuItems {
   static const List<MenuItem> itemsFirst = [
     maps,
-    signIn,
-    signUp,
   ];
 
   static const List<MenuItem> itemsSecond = [signOut];
-  static const signIn = MenuItem(text: 'Sign In', icon: Icons.login);
   static const maps = MenuItem(text: 'Map', icon: Icons.map_outlined);
 
-  static const signUp = MenuItem(text: 'Sign Up', icon: Icons.manage_accounts);
   static const signOut =
       MenuItem(text: 'Sign Out', icon: Icons.logout_outlined);
 }

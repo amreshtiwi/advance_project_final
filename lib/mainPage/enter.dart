@@ -16,12 +16,6 @@ import '../models/country.dart';
 var signIn = true;
 List<MenuItem> check = [menuItems.signOut];
 
-void main() {
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Color.fromARGB(255, 35, 35, 35)));
-  runApp(front());
-}
-
 class front extends StatefulWidget {
   @override
   State<front> createState() => _frontState();
@@ -32,6 +26,7 @@ class _frontState extends State<front> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           leadingWidth: 100,
           leading: CountryListPick(
@@ -51,7 +46,8 @@ class _frontState extends State<front> {
                 setState(() {
                   contryCode = CountryCode!.code.toString();
                 });
-                print(CountryCode?.code); ////////////////////////////// country name
+                print(CountryCode
+                    ?.code); ////////////////////////////// country name
                 getinfo(contryCode);
               },
               useUiOverlay: true,
@@ -70,13 +66,16 @@ class _frontState extends State<front> {
         ));
   }
 
-  getinfo(String contryCode)async{
+  getinfo(String contryCode) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token=(prefs.getString('token')??'');
-    final response =await http.get(Uri.parse("http://192.168.1.65:8090/api/v1/covid/byDateAndCountry/2022-04-06/"+contryCode),
+    String token = (prefs.getString('token') ?? '');
+    final response = await http.get(
+      Uri.parse(
+          "http://192.168.1.65:8090/api/v1/covid/byDateAndCountry/2022-04-06/" +
+              contryCode),
       // Send authorization headers to the backend.
       headers: {
-        HttpHeaders.authorizationHeader: 'Bearer '+token,
+        HttpHeaders.authorizationHeader: 'Bearer ' + token,
         "content-type": "application/json"
       },
     );

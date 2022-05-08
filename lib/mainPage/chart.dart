@@ -24,7 +24,8 @@ class _ChartState extends State<Chart> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Container(
-          width: 360,
+          width: 300,
+          height: 320,
           child: SfCircularChart(
             title: ChartTitle(text: ''),
             legend: Legend(
